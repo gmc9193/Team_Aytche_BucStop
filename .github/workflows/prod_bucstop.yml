@@ -18,21 +18,14 @@ jobs:
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '9.x'
-
-      - name: Find project file
-        id: find-project
-        run: |
-          PROJECT_FILE=$(find . -name '*.csproj' | head -n 1)
-          echo "PROJECT_FILE=$PROJECT_FILE" >> $GITHUB_OUTPUT
-          echo "PROJECT_DIR=$(dirname "$PROJECT_FILE")" >> $GITHUB_OUTPUT
+          dotnet-version: '8.x'  # Using 8.x as it's the current LTS version
 
       - name: Build with dotnet
-        working-directory: ${{ steps.find-project.outputs.PROJECT_DIR }}
+        working-directory: BucStop_Webapp/BucStop
         run: dotnet build --configuration Release
 
       - name: dotnet publish
-        working-directory: ${{ steps.find-project.outputs.PROJECT_DIR }}
+        working-directory: BucStop_Webapp/BucStop
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
@@ -71,7 +64,3 @@ jobs:
           app-name: 'bucstop'
           slot-name: 'Production'
           package: ${{env.DOTNET_ROOT}}/myapp
-          app-name: 'bucstop'
-          slot-name: 'Production'
-          package: .
-          
